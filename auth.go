@@ -1,6 +1,10 @@
 package firebase
 
-import "sync"
+import (
+	"sync"
+
+	"golang.org/x/net/context"
+)
 
 var authInstances = struct {
 	sync.Mutex
@@ -72,7 +76,7 @@ func (a *Auth) CreateCustomToken(uid string, developerClaims *Claims) (string, e
 // This allows use to initialize an urlfetch http Transport Engine
 // if this package is being used within Google App Engine Standard
 // Environment.
-func (a *Auth) VerifyIDToken(tokenString string, ctx cotext.Context) (*Token, error) {
+func (a *Auth) VerifyIDToken(tokenString string, ctx context.Context) (*Token, error) {
 	if err := a.app.options.ensureServiceAccount(); err != nil {
 		return nil, err
 	}
