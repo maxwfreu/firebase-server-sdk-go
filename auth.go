@@ -67,10 +67,15 @@ func (a *Auth) CreateCustomToken(uid string, developerClaims *Claims) (string, e
 // token is valid, meaning: the token is properly signed, has not expired,
 // and it was issued for the project associated with this Auth instance
 // (which by default is extracted from your service account).
-func (a *Auth) VerifyIDToken(tokenString string) (*Token, error) {
+// ------
+// Note: VeriftIDToken takes a context parameter.
+// This allows use to initialize an urlfetch http Transport Engine
+// if this package is being used within Google App Engine Standard
+// Environment.
+func (a *Auth) VerifyIDToken(tokenString string, ctx cotext.Context) (*Token, error) {
 	if err := a.app.options.ensureServiceAccount(); err != nil {
 		return nil, err
 	}
 	projectID := a.app.options.ServiceAccountCredential.ProjectID
-	return verify(projectID, tokenString)
+	return verify(projectID, tokenString, ctx)
 }
